@@ -8,8 +8,17 @@
 </head>
 <body>
     <h1>Seat Reservation</h1>
-    <div id="seats">
-        <!-- 자리 예약 UI를 여기에 작성 -->
+    <button id="reserve-button">예약</button>
+    <button id="change-seat-button">자리 변경</button>
+    <div id="seat-map">
+        <!-- 자리 배치 -->
+    </div>
+    <div id="reservation-form" class="hidden">
+        <label for="student-id">학번 (예: 10101):</label>
+        <input type="text" id="student-id" placeholder="학년반번호" required>
+        <label for="student-name">이름:</label>
+        <input type="text" id="student-name" placeholder="이름" required>
+        <button id="confirm-button">예약 확정</button>
     </div>
     <script src="script.js"></script>
 </body>
