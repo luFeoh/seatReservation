@@ -1,1 +1,22 @@
+/* 스타일을 여기에 작성 */
+body {
+    font-family: Arial, sans-serif;
+}
+
+#seats {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.seat {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.seat.reserved {
+    background-color: #f00;
+}
 
