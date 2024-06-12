@@ -3,25 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seat Reservation</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>자리 변경</title>
+    <style>
+        .seat {
+            width: 50px;
+            height: 50px;
+            background-color: #ccc;
+            display: inline-block;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <h1>Seat Reservation</h1>
-    <div>
-        <button id="reserve-button">예약</button>
-        <button id="change-seat-button">자리 변경</button>
+    <label for="studentId">학번:</label>
+    <input type="text" id="studentId">
+    
+    <div id="seats">
+        <!-- 좌석들이 여기에 동적으로 생성될 것입니다. -->
     </div>
-    <div id="seat-map">
-        <!-- 자리 배치 -->
-    </div>
-    <div id="reservation-form" class="hidden">
-        <label for="student-id">학번 (예: 10101):</label>
-        <input type="text" id="student-id" placeholder="학년반번호" required>
-        <label for="student-name">이름:</label>
-        <input type="text" id="student-name" placeholder="이름" required>
-        <button id="confirm-button">예약 확정</button>
-    </div>
-    <script src="script.js"></script>
+
+    <script>
+        let studentId = ""; // 학번 저장 변수
+        let selectedSeat = null; // 선택한 좌석 저장 변수
+
+        function selectSeat(seat) {
+            if (selectedSeat !== null) {
+                selectedSeat.style.backgroundColor = '#ccc'; // 이전에 선택한 좌석의 색을 원래대로 되돌림
+            }
+            selectedSeat = seat;
+            seat.style.backgroundColor = 'green'; // 선택한 좌석의 색을 변경
+        }
+
+        function changeSeat() {
+            if (studentId === "") {
+                alert("학번을 입력하세요.");
+                return;
+            }
+            if (selectedSeat === null) {
+                alert("자리를 선택하세요.");
+                return;
+            }
+            // 여기에 자리 변경을 처리하는 로직을 추가합니다.
+            // 예: 선택한 좌석을 예약 가능한 좌석으로 변경하고, 기존 좌석을 예약된 좌석으로 변경합니다.
+            console.log(`학번: ${studentId}, 변경된 좌석: ${selectedSeat.textContent}`);
+        }
+
+        function createSeats(numSeats) {
+            const seatsDiv = document.getElementById('seats');
+            for (let i = 1; i <= numSeats; i++) {
+                const seat = document.createElement('div');
+                seat.textContent = i;
+                seat.className = 'seat';
+                seat.onclick = function() {
+                    selectSeat(seat);
+                };
+                seatsDiv.appendChild(seat);
+            }
+        }
+
+        window.onload = function() {
+            const numSeats = 10; // 좌석 수
+            createSeats(numSeats);
+        };
+    </script>
 </body>
 </html>
