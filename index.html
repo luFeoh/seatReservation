@@ -12,60 +12,116 @@
             display: inline-block;
             margin: 5px;
             cursor: pointer;
+            text-align: center;
+            line-height: 50px;
+        }
+        .seat.selected {
+            background-color: yellow;
+        }
+        .seat.reserved {
+            background-color: red;
+            cursor: not-allowed;
+        }
+        .seat.my-reservation {
+            background-color: blue;
+            cursor: not-allowed;
+        }
+        .hidden {
+            display: none;
+        }
+        #class-name {
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            font-size: 20px;
         }
     </style>
+      <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <label for="studentId">학번:</label>
-    <input type="text" id="studentId">
-    <label for="studentName">이름:</label>
-    <input type="text" id="studentName">
-    
-    <div id="seats">
+    <label id="class-name-label" for="class-name">수업 이름:</label>
+    <input type="text" id="class-name">
+
+    <div id="seat-map">
         <!-- 좌석들이 여기에 동적으로 생성될 것입니다. -->
     </div>
 
+    <button id="reserve-button">예약</button>
+    <button id="change-seat-button">자리 변경</button>
+
+    <div id="reservation-form" class="hidden">
+        <button id="confirm-button">예약 확정</button>
+    </div>
+
     <script>
-        let reservations = {}; // 좌석별 예약 정보를 저장할 객체
+        document.addEventListener('DOMContentLoaded', () => {
+            const seatMap = document.getElementById('seat-map');
+            const reserveButton = document.getElementById('reserve-button');
+            const changeSeatButton = document.getElementById('change-seat-button');
+            const reservationForm = document.getElementById('reservation-form');
+            const confirmButton = document.getElementById('confirm-button');
+            const classNameInput = document.getElementById('class-name');
 
-        function reserveSeat(seat) {
-            const studentId = document.getElementById('studentId').value;
-            const studentName = document.getElementById('studentName').value;
-            
-            if (studentId === "" || studentName === "") {
-                alert("학번과 이름을 모두 입력하세요.");
-                return;
-            }
-            const seatNumber = seat.textContent;
-            if (reservations[seatNumber]) {
-                alert("이미 예약된 좌석입니다.");
-                return;
-            }
-            reservations[seatNumber] = {
-                studentId: studentId,
-                studentName: studentName
-            };
-            seat.style.backgroundColor = 'green'; // 선택한 좌석의 색을 변경
-            alert(`좌석 ${seatNumber}이(가) ${studentName} 학생(${studentId})에 의해 예약되었습니다.`);
-        }
+            const seats = [];
+            let selectedSeat = null;
+            let reservations = {};
 
-        function createSeats(numSeats) {
-            const seatsDiv = document.getElementById('seats');
-            for (let i = 1; i <= numSeats; i++) {
-                const seat = document.createElement('div');
-                seat.textContent = i;
-                seat.className = 'seat';
-                seat.onclick = function() {
-                    reserveSeat(seat);
-                };
-                seatsDiv.appendChild(seat);
+            // 좌석 생성
+            for (let row = 0; row < 5; row++) {
+                for (let col = 0; col < 6; col++) {
+                    if (row === 4 && col === 5) continue; // 6번째 열 5번째 행은 자리 없음
+                    const seat = document.createElement('div');
+                    seat.classList.add('seat');
+                    seat.dataset.row = row;
+                    seat.dataset.col = col;
+                    seat.textContent = `${row + 1}-${col + 1}`;
+                    seat.addEventListener('click', () => {
+                        if (seat.classList.contains('reserved') || seat.classList.contains('my-reservation')) return;
+                        if (selectedSeat) selectedSeat.classList.remove('selected');
+                        seat.classList.add('selected');
+                        selectedSeat = seat;
+                    });
+                    seats.push(seat);
+                    seatMap.appendChild(seat);
+                }
             }
-        }
 
-        window.onload = function() {
-            const numSeats = 10; // 좌석 수
-            createSeats(numSeats);
-        };
+            // 예약 버튼 클릭
+            reserveButton.addEventListener('click', () => {
+                reservationForm.classList.remove('hidden');
+            });
+
+            // 자리 변경 버튼 클릭
+            changeSeatButton.addEventListener('click', () => {
+                reservationForm.classList.remove('hidden');
+            });
+
+            // 예약 확정 버튼 클릭
+            confirmButton.addEventListener('click', () => {
+                if (selectedSeat) {
+                    selectedSeat.classList.add('my-reservation');
+                    selectedSeat.classList.remove('selected');
+                    reservations[selectedSeat.textContent] = 'my-reservation';
+                    selectedSeat = null;
+                    reservationForm.classList.add('hidden');
+                } else {
+                    alert('자리를 선택하세요.');
+                }
+            });
+
+            // 예시로 다른 사람이 예약한 좌석 표시
+            function reserveSeatExternally(seatNumber) {
+                const seat = seats.find(s => s.textContent === seatNumber);
+                if (seat) {
+                    seat.classList.add('reserved');
+                    reservations[seatNumber] = 'reserved';
+                }
+            }
+
+            // 예시: 외부에서 예약된 좌석 표시
+            // reserveSeatExternally('1-1');
+            // reserveSeatExternally('2-3');
+        });
     </script>
 </body>
 </html>

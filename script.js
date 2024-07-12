@@ -73,4 +73,31 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('자리를 선택하세요.');
         }
     });
+    // confirmButton.addEventListener('click', () => {
+    //     const studentId = studentIdInput.value.trim();
+    //     const studentName = studentNameInput.value.trim();
+
+    //     if (!studentId || !studentName) {
+    //         alert('학번과 이름을 입력하세요.');
+    //         return;
+    //     }
+
+    //     if (reservations[studentId]) {
+    //         alert('이미 예약된 학번입니다.');
+    //         return;
+    //     }
+
+    //     if (selectedSeat) {
+    //         selectedSeat.classList.add('reserved');
+    //         reservations[studentId] = {
+    //             name: studentName,
+    //             seat: selectedSeat,
+    //         };
+    //         selectedSeat.classList.remove('selected');
+    //         selectedSeat = null;
+    //         reservationForm.classList.add('hidden');
+    //     } else {
+    //         alert('자리를 선택하세요.');
+    //     }
+    // });
 });
